@@ -140,6 +140,7 @@ class Menu:
                 f"({controls["exit"]}): выйти из меню"
                 "[/#535353]",
                 expand = False
-            )
+            ),
+            self.current_page._build_objects(self.current_page)
         )
     

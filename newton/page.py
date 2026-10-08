@@ -3,6 +3,9 @@ from .option import Option
 from rich.tree import Tree
 from rich.text import Text
 from rich.panel import Panel
+from rich.columns import Columns
+
+from rich.console import RenderableType
 
 class Page:
     name: str
@@ -10,6 +13,8 @@ class Page:
 
     options: list[Option]
     soi: int = 0
+
+    objects: list["RenderableType"] = []
 
     def move_soi(self, direction: str):
         match direction:
@@ -23,6 +28,11 @@ class Page:
                     len(self.options) - 1,
                     self.soi + 1
                 )
+
+    def _build_objects(self):
+        return Columns(
+            object for object in self.objects
+        )
 
     def _build_tree_options(self):
         tree_options = Tree(self.name_tree)
