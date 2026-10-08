@@ -1,10 +1,12 @@
 from typing import Callable
+from rich.console import RenderableType
 
 class Option:
     def __init__(
         self,
 
         name: str,
+        description: "RenderableType",
         execute_function: Callable,
         args: list = [],
 
@@ -12,6 +14,7 @@ class Option:
         pressed_color: str = "white on green"
     ) -> None:
         self.name = name
+        self.description = description
         self.execute_function = execute_function
         self.args = args
 

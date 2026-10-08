@@ -4,6 +4,7 @@ from .page import Page
 from rich.panel import Panel
 from rich.console import Group
 from rich.live import Live
+from rich.columns import Columns
 
 import keyboard, time
 
@@ -117,6 +118,7 @@ class Menu:
     def _read_next_key(self) -> str:
         while True:
             next_key = keyboard.read_event()
+            keyboard.press("backspace")
 
             if not next_key.name in list(self.control_menu.keys()): continue
 
@@ -135,7 +137,13 @@ class Menu:
                 f"[#535353]{self.title}:{self.version} /[/#535353] {self.current_page.name}",
                 expand = False
             ),
-            self.current_page.build_page(self.current_page),
+            Columns([
+                self.current_page.build_page(self.current_page),
+                Panel(
+                    self.current_page.options[self.current_page.soi].description,
+                    expand = False
+                )
+            ]),
             Panel(
                 "[#535353]"
                 f"({controls["down_soi"]}/{controls["up_soi"]}): выбрать опции | "
