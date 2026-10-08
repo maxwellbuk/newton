@@ -7,7 +7,7 @@ from rich.panel import Panel
 class Page:
     name: str
     name_tree: str = "выберите опции"
-    
+
     options: list[Option]
     soi: int = 0
 
@@ -39,5 +39,6 @@ class Page:
 
     def build_page(self):
         return Panel(
-            self._build_tree_options(self)
+            self._build_tree_options(self),
+            expand = False
         )

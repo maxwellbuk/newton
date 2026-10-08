@@ -1,3 +1,4 @@
+from .exceptions import MenuException
 from .page import Page
 
 from rich.panel import Panel
@@ -23,6 +24,16 @@ class Menu:
 
         self.title = title
         self.version = version
+
+        if [
+            "up_soi",
+            "down_soi",
+            "turn_page_left",
+            "turn_page_right",
+            "execute_option",
+            "exit"
+        ] != list(control_menu.values()):
+            raise MenuException("При создании собственного управления, не все действия были привязаны к клавише")
 
         self.control_menu = control_menu
 
@@ -120,7 +131,10 @@ class Menu:
         controls = {action: keyword for keyword, action in self.control_menu.items()}
 
         return Group(
-            Panel(f"[#535353]{self.title}:{self.version} /[/#535353] {self.current_page.name}"),
+            Panel(
+                f"[#535353]{self.title}:{self.version} /[/#535353] {self.current_page.name}",
+                expand = False
+            ),
             self.current_page.build_page(self.current_page),
             Panel(
                 "[#535353]"
@@ -128,7 +142,8 @@ class Menu:
                 f"({controls["turn_page_left"]}/{controls["turn_page_right"]}): перелистнуть страницы | "
                 f"({controls["execute_option"]}): вызвать опцию | "
                 f"({controls["exit"]}): выйти из меню"
-                "[/#535353]"
+                "[/#535353]",
+                expand = False
             )
         )
     
