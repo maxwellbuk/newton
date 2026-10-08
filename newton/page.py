@@ -1,5 +1,41 @@
 from .option import Option
 
+from rich.tree import Tree
+from rich.text import Text
+from rich.panel import Panel
+
 class Page:
     name: str
     options: list[Option]
+    soi: int = 0
+
+    def move_soi(self, direction: str):
+        match direction:
+            case "up":
+                self.soi = max(
+                    0,
+                    self.soi - 1
+                )
+            case "down":
+                self.soi = min(
+                    len(self.options) - 1,
+                    self.soi + 1
+                )
+
+    def _build_tree_options(self):
+        tree_options = Tree("выберите опции")
+
+        for option in self.options:
+            tree_options.add(
+                Text(
+                    option.name,
+                    style = option.pressed_color if self.options.index(option) == self.soi else option.basic_color
+                )
+            )
+
+        return tree_options
+
+    def build_page(self):
+        return Panel(
+            self._build_tree_options(self)
+        )
