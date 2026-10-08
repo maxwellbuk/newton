@@ -1,5 +1,6 @@
 from .exceptions import MenuException
 from .page import Page
+from .keynext import Keynext
 
 from rich.panel import Panel
 from rich.console import Group
@@ -79,9 +80,10 @@ class Menu:
 
             while not self.need_stop:
 
-                try: enter_key = self._read_next_key()
-                except KeyboardInterrupt: break
+                enter_key = Keynext._read_next_key(list(self.control_menu.keys()))
 
+                if enter_key == "exit": self.need_stop = True; continue
+                
                 match self.control_menu[enter_key]:
                     case "up_soi":
                         self.current_page.move_soi(
@@ -114,20 +116,6 @@ class Menu:
                 live.update(
                     self._build_menu()
                 )
-
-    def _read_next_key(self) -> str:
-        while True:
-            next_key = keyboard.read_event()
-            keyboard.press("backspace")
-
-            if not next_key.name in list(self.control_menu.keys()): continue
-
-            if next_key.event_type == keyboard.KEY_UP: continue
-
-            start = time.time()
-            while next_key.event_type == keyboard.KEY_DOWN:
-
-                if start > 0.1: return next_key.name
 
     def _build_menu(self):
         controls = {action: keyword for keyword, action in self.control_menu.items()}
