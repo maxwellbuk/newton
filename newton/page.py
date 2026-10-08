@@ -6,6 +6,8 @@ from rich.panel import Panel
 
 class Page:
     name: str
+    name_tree: str = "выберите опции"
+    
     options: list[Option]
     soi: int = 0
 
@@ -23,7 +25,7 @@ class Page:
                 )
 
     def _build_tree_options(self):
-        tree_options = Tree("выберите опции")
+        tree_options = Tree(self.name_tree)
 
         for option in self.options:
             tree_options.add(

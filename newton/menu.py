@@ -1,5 +1,7 @@
 from .page import Page
 
+from rich.panel import Panel
+from rich.console import Group
 from rich.live import Live
 
 import keyboard, time
@@ -59,7 +61,7 @@ class Menu:
 
     def _render(self):
         with Live(
-            self.current_page.build_page(self.current_page),
+            self._build_menu(),
             refresh_per_second = 20
         ) as live:
 
@@ -98,7 +100,7 @@ class Menu:
                     case "exit": break
 
                 live.update(
-                    self.current_page.build_page(self.current_page)
+                    self._build_menu()
                 )
 
     def _read_next_key(self) -> str:
@@ -113,3 +115,20 @@ class Menu:
             while next_key.event_type == keyboard.KEY_DOWN:
 
                 if start > 0.1: return next_key.name
+
+    def _build_menu(self):
+        controls = {action: keyword for keyword, action in self.control_menu.items()}
+
+        return Group(
+            Panel(f"[#535353]{self.title}:{self.version} /[/#535353] {self.current_page.name}"),
+            self.current_page.build_page(self.current_page),
+            Panel(
+                "[#535353]"
+                f"({controls["down_soi"]}/{controls["up_soi"]}): выбрать опции | "
+                f"({controls["turn_page_left"]}/{controls["turn_page_right"]}): перелистнуть страницы | "
+                f"({controls["execute_option"]}): вызвать опцию | "
+                f"({controls["exit"]}): выйти из меню"
+                "[/#535353]"
+            )
+        )
+    
